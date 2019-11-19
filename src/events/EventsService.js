@@ -3,7 +3,12 @@ const EventsService = {
   getAllEvents(db) {
     return db
       .from('events')
-      .select('*');
+      .select('events.*', 'users.username')
+      .join(
+        'users',
+        'users.id',
+        'events.host_id'
+      );
   }
 };
 
