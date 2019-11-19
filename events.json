@@ -1,62 +1,66 @@
 [
   {
   "id": "1",
-  "event_name": "Folk Music Night",
-  "event_date": "November 20th 2019 at 7pm",
+  "name": "Folk Music Night",
+  "date": "November 20th 2019",
+  "time": "7:00pm",
   "location": "Peak Place Coffee",
   "city": "Colorado Springs",
   "state": "CO",
   "slots_available": "3",
   "host_id": "1",
-  "host_username": "janedoe",
-  "event_type": "music",
+  "event_type": "music performance",
   "paid": "false",
   "description": "Looking to book three more artists for an evening of Folk music at Peak Place. We have a microphone and small PA system for you to use. Each artist set will be approx 30 minutes long. Please contact me at jane@gmail.com",
-  "additional_details": "Please arrive by 6pm for set up. We have a small area where you can display your merch if you would like. We repeat this event once a month and are looking for regulars to play this event. Free coffee on us."
+  "additional_details": "Please arrive by 6pm for set up. We have a small area where you can display your merch if you would like. We repeat this event once a month and are looking for regulars to play this event. Free coffee on us.",
+  "img_url": null
 },
 {
   "id": "2",
-  "event_name": "House Show",
-  "event_date": "November 29th 2019 at 8pm",
+  "name": "House Show",
+  "date": "November 29th 2019",
+  "time":"8:00 pm",
   "location": "DM for Address",
   "city": "Colorado Springs",
   "state": "CO",
   "slots_available": "1",
   "host_id": "2",
-  "host_username": "haleyMusic",
   "event_type": "music",
   "paid": "false",
   "description": "We had a band drop out and are looking for a hardcore band to play our house show. It is XYZ's album release show and AAA and BBB will be playing as well. ",
-  "additional_details": "Load in is at 7. We do not have any sound system, so bring your own gear."
+  "additional_details": "Load in is at 7. We do not have any sound system, so bring your own gear.",
+  "img_url": null
 },
 {
   "id": "3",
-  "event_name": "Book Signing",
-  "event_date": "December 1st, 2019 at 10am",
+  "name": "Book Signing",
+  "date": "December 1st, 2019",
+  "time": "10:00 am",
   "location": "Barnes and Noble",
   "city": "Colorado Springs",
   "state": "CO",
   "slots_available": "1",
   "host_id": "3",
-  "host_username": "JayAtB&N",
   "event_type": "Book signing",
   "paid": "true",
   "description": "Once a month we host a local author spotlight. We are looking for one local author to read an excerpt of their novel and stay around for a book signing or to answer questions afterwards.",
-  "additional_details": "Please arrive at 9:45 am for set up. We will supply a table and chairs."
+  "additional_details": "Please arrive at 9:45 am for set up. We will supply a table and chairs.",
+  "img_url": null
 },
 {
   "id": "4",
-  "event_name": "Mixed Media Art Show",
-  "event_date": "December 12th, 2019 at 3pm",
+  "name": "Mixed Media Art Show",
+  "date": "December 12th, 2019",
+  "time": "3:00pm",
   "location": "Welcome Fellow",
   "city": "Colorado Springs",
   "state": "CO",
   "slots_available": "4",
   "host_id": "4",
-  "host_username": "jeff",
   "event_type": "Art Show",
   "paid": "false",
   "description": "We are hosting a small art show that will be open to the public on December 12th. We are looking for any local artists that would like to display some of their works at the show. You would have wall space for hanging pieces (approx 4ft by 4ft) and could also have a small table space for setup as well. e-mail jeff@gmail.com for more details.",
-  "additional_details": "We will have a set-up day on December 11th to make sure everyone has the appropriate space and tools to set up their art pieces."
+  "additional_details": "We will have a set-up day on December 11th to make sure everyone has the appropriate space and tools to set up their art pieces.",
+  "img_url": null
 }
 ]

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS requestors;
+DROP TYPE IF EXISTS status;

@@ -4,7 +4,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
-const events = require('../events.json');
+const validateBearerToken = require('./middleware/bearer-token-auth');
+const eventsRouter = require('./events/events-router');
 
 const app = express();
 
@@ -16,18 +17,7 @@ app.use(helmet());
 app.use(cors());
 app.use(validateBearerToken);
 
-function validateBearerToken(req,res,next){
-  const auth = req.get('Authorization');
-  const apiToken = process.env.API_TOKEN;
-  if(!auth || auth.split(' ')[1] !== apiToken){
-    return res.status(401).json({error: 'Unauthorized request'});
-  }
-  next();
-}
-
-app.get('/api/events', (req,res,next) => {
-  return res.status(200).json(events);
-});
+app.use('/api/events', eventsRouter);
 
 app.use(function errorHandler(error, req, res, next ){
   let response;
