@@ -4,6 +4,7 @@ const eventsRouter = express.Router();
 const EventsService = require('./EventsService');
 const jsonBodyParser = express.json();
 const { requireAuth } = require('../middleware/jwt-auth');
+const Treeize = require('treeize');
 
 eventsRouter
   .route('/')
@@ -16,7 +17,7 @@ eventsRouter
       })
       .catch(next);
   })
-  .patch((req,res,next) => {
+  .patch((req, res, next) => {
     const knexInstance = req.app.get('db');
 
     EventsService.archiveEvents(knexInstance)
@@ -65,12 +66,27 @@ eventsRouter
     res.status(200).json(newEvent);
     EventsService.createEvent(knexInstance, newEvent)
       .then(event => {
-        event.username= req.user.username;
+        event.username = req.user.username;
         return res.status(201).json(event);
       })
       .catch(next);
   });
 
+eventsRouter
+  .route('/user-events')
+  .all(requireAuth)
+  .get((req,res,next)=> {
+    const knexInstance = req.app.get('db');
+    const user_id = req.user.id;
+
+    EventsService.getAllEventsByUser(knexInstance, user_id)
+      .then(result => {
+        const userEvents = new Treeize();
+        userEvents.grow(result);
+        return res.status(200).json(userEvents.getData());
+      })
+      .catch(next);
+  });
 
 
 

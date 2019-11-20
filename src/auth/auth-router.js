@@ -8,7 +8,6 @@ authRouter
     const knexInstance = req.app.get('db');
     const { username, password } = req.body;
     const loginUser = { username, password };
-    console.log(password);
 
     for (const [key, value] of Object.entries(loginUser))
       if (!value) {
@@ -17,7 +16,6 @@ authRouter
 
     AuthService.getUserWithUserName(knexInstance, loginUser.username)
       .then(user => {
-        console.log(user);
         if (!user) {
           return res.status(400).json({ error: 'Incorrect username or password' });
         } 

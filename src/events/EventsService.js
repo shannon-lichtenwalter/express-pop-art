@@ -1,3 +1,5 @@
+
+
 const EventsService = {
 
   getAllEvents(db) {
@@ -11,6 +13,40 @@ const EventsService = {
         'events.host_id'
       )
       .orderBy(['date', 'time'], 'asc');
+  },
+
+  // getAllEventsHostedByUser(db, user_id){
+  //   return db
+  //     .from('events')
+  //     .where({host_id: user_id})
+  //     .select(
+  //       'events.name',
+  //       'events.date',
+  //       'events.time'
+  //     );
+  // },
+
+  getAllEventsByUser(db, user_id) {
+    return db
+      .from('events')
+      .where({host_id: user_id})
+      .select(
+        'events.name',
+        'events.date',
+        'events.time',
+        'requestors.user_id as requestors:user_id',
+        'requestors.booking_status as requestors:booking_status',
+        'users.username as requestors:username'
+      )
+      .leftJoin(
+        'requestors',
+        'requestors.event_id',
+        'events.id')
+      .leftJoin(
+        'users',
+        'users.id',
+        'requestors.user_id'
+      )
   },
 
   createEvent(db, newEvent) {

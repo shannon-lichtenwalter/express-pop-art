@@ -28,12 +28,10 @@ usersRouter
   .route('/getLoggedInUser')
   .all(requireAuth) //require auth will give us access to a logged in user as it sets the user on the request object
   .get((req, res) => {
-    console.log(req.user);
     const currentuser = {
       username: req.user.username,
       user_id: req.user.id
     };
-    console.log(currentuser);
     return res.status(200).json(currentuser);
   });
 
