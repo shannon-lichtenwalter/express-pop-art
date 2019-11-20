@@ -9,6 +9,7 @@ const eventsRouter = require('./events/events-router');
 const usersRouter = require('./users/users-router');
 const app = express();
 const authRouter = require('./auth/auth-router');
+const requestorsRouter = require('./requestors/requestors-router');
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -21,6 +22,7 @@ app.use(cors());
 app.use('/api/events', eventsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/requests', requestorsRouter);
 
 app.use(function errorHandler(error, req, res, next ){
   let response;

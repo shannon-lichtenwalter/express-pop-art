@@ -3,7 +3,7 @@ const eventsRouter = express.Router();
 //const events = require('../../events.json');
 const EventsService = require('./EventsService');
 const jsonBodyParser = express.json();
-const { requireAuth } = require('../middleware/jwt-auth.js');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 eventsRouter
   .route('/')
