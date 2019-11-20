@@ -15,6 +15,15 @@ eventsRouter
         return res.status(200).json(events);
       })
       .catch(next);
+  })
+  .patch((req,res,next) => {
+    const knexInstance = req.app.get('db');
+
+    EventsService.archiveEvents(knexInstance)
+      .then(() => {
+        return res.status(204).end();
+      })
+      .catch(next);
   });
 
 eventsRouter
