@@ -3,6 +3,7 @@ const usersRouter = express.Router();
 const jsonBodyParser = express.json();
 const UsersService = require('./UsersService');
 const { requireAuth } = require('../middleware/jwt-auth');
+const path = require('path');
 
 
 usersRouter
@@ -17,11 +18,34 @@ usersRouter
         return res.status(400).json({ error: `Missing '${key}' in request body` });
       }
 
-    UsersService.createUser(knexInstance, newUser)
-      .then(user => {
-        return res.status(201).json(user);
-      });
+    const passwordError = UsersService.validatePassword(password);
+    if (passwordError) {
+      return res.status(400).json({ error: passwordError });
+    }
+    UsersService.hasUserWithUserName(
+      req.app.get('db'),
+      username
+    )
+      .then(hasUserWithUserName => {
+        if (hasUserWithUserName)
+          return res.status(400).json({ error: 'Username already taken' });
+        return UsersService.hashPassword(password)
+          .then(hashedPassword => {
+            newUser.password = hashedPassword;
 
+            return UsersService.createUser(
+              knexInstance,
+              newUser
+            )
+              .then(user => {
+                return res
+                  .status(201)
+                  .location(path.posix.join(req.originalUrl, `/${user.id}`))
+                  .json(UsersService.serializeUser(user));
+              });
+          });
+      })
+      .catch(next);
   });
 
 usersRouter
@@ -32,7 +56,7 @@ usersRouter
       username: req.user.username,
       user_id: req.user.id
     };
-    return res.status(200).json(currentuser);
+    return res.status(200).json(UsersService.serializeUser(currentuser));
   });
 
 module.exports = usersRouter;
