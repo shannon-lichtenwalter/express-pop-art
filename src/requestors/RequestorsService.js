@@ -8,7 +8,8 @@ const RequestorsService = {
       .join(
         'events',
         'requestors.event_id',
-        'events.id');
+        'events.id')
+      .orderBy(['events.date', 'events.time'], 'asc');
   },
 
 

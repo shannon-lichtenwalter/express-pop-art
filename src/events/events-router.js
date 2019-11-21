@@ -75,7 +75,7 @@ eventsRouter
 eventsRouter
   .route('/user-events')
   .all(requireAuth)
-  .get((req,res,next)=> {
+  .get((req, res, next) => {
     const knexInstance = req.app.get('db');
     const user_id = req.user.id;
 
@@ -84,6 +84,19 @@ eventsRouter
         const userEvents = new Treeize();
         userEvents.grow(result);
         return res.status(200).json(userEvents.getData());
+      })
+      .catch(next);
+  });
+
+eventsRouter
+  .route('/updateSlots')
+  .all(requireAuth)
+  .patch(jsonBodyParser, (req, res, next) => {
+    const knexInstance = req.app.get('db');
+    const { id } = req.body;
+    EventsService.updateSlotsAvailable(knexInstance, id)
+      .then(event => {
+        res.status(200).json(event);
       })
       .catch(next);
   });

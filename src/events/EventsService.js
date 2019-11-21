@@ -18,13 +18,14 @@ const EventsService = {
   getAllEventsByUser(db, user_id) {
     return db
       .from('events')
-      .where({host_id: user_id})
+      .where({ host_id: user_id })
       .whereNot({ archived: true })
       .select(
         'events.name',
         'events.id',
         'events.date',
         'events.time',
+        'events.slots_available',
         'requestors.user_id as requestors:user_id',
         'requestors.booking_status as requestors:booking_status',
         'users.username as requestors:username'
@@ -37,7 +38,8 @@ const EventsService = {
         'users',
         'users.id',
         'requestors.user_id'
-      );
+      )
+      .orderBy(['events.date', 'events.time'], 'asc');
   },
 
   createEvent(db, newEvent) {
@@ -54,9 +56,18 @@ const EventsService = {
     const todaysDate = new Date().toLocaleString();
     return db('events')
       .where('date', '<', `${todaysDate}`)
-      .update({archived: true});
-  }
+      .update({ archived: true });
+  },
 
+  updateSlotsAvailable(db, id) {
+    return db('events')
+      .where({ id })
+      .decrement('slots_available', 1)
+      .returning('*')
+      .then(rows => {
+        return rows[0];
+      });
+  }
 
 };
 
