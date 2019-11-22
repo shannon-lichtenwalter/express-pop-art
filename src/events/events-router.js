@@ -32,7 +32,7 @@ eventsRouter
       })
       .catch(next);
 
-    
+
   })
   .patch((req, res, next) => {
     const knexInstance = req.app.get('db');
@@ -40,6 +40,23 @@ eventsRouter
     EventsService.archiveEvents(knexInstance)
       .then(() => {
         return res.status(204).end();
+      })
+      .catch(next);
+  });
+
+eventsRouter
+  .route('/event/:eventId')
+  .all(requireAuth)
+  .get((req, res, next) => {
+    const knexInstance = req.app.get('db');
+    const event_id = req.params.eventId;
+
+    EventsService.getEventById(knexInstance, event_id)
+      .then(event => {
+        if(event.length === 0){
+          return res.status(404).json({error: 'Event Not Found'});
+        }
+        return res.status(200).json(event);
       })
       .catch(next);
   });

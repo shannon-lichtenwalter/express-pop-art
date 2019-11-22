@@ -15,7 +15,7 @@ const EventsService = {
       .orderBy(['date', 'time'], 'asc');
   },
 
-  getEventsByQuery(db, query){
+  getEventsByQuery(db, query) {
     return db
       .from('events')
       .where(query)
@@ -27,6 +27,18 @@ const EventsService = {
         'events.host_id'
       )
       .orderBy(['date', 'time'], 'asc');
+  },
+
+  getEventById(db, id) {
+    return db
+      .from('events')
+      .where({ 'events.id': id })
+      .select('events.*', 'users.username')
+      .join(
+        'users',
+        'users.id',
+        'events.host_id'
+      );
   },
 
   getAllEventsByUser(db, user_id) {
@@ -83,9 +95,9 @@ const EventsService = {
       });
   },
 
-  deleteEvent(db, event_id){
+  deleteEvent(db, event_id) {
     return db('events')
-      .where({id: event_id})
+      .where({ id: event_id })
       .delete();
   },
 
