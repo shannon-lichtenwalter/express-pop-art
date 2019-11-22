@@ -30,15 +30,16 @@
     "morgan": "^1.9.1",
     "path": "^0.12.7",
     "pg": "^7.13.0",
+    "postgrator": "^3.10.2",
     "react-moment": "^0.9.6",
     "treeize": "^2.1.2",
-    "xss": "^1.0.6",
-    "postgrator-cli": "^3.2.0"
+    "xss": "^1.0.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "postgrator-cli": "^3.2.0"
   }
 }
