@@ -48,6 +48,12 @@ const UsersService = {
       username: xss(user.username)
     };
 
+  },
+
+  deleteUser(db, user_id) {
+    return db('users')
+      .where({ id: user_id })
+      .delete();
   }
 };
 
