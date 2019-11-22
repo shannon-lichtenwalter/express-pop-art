@@ -75,7 +75,7 @@ eventsRouter
     newEvent.additional_details = additional_details;
     newEvent.img_url = img_url;
     newEvent.archived = archived;
-    res.status(200).json(newEvent);
+    
     EventsService.createEvent(knexInstance, newEvent)
       .then(event => {
         event.username = req.user.username;
