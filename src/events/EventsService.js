@@ -67,7 +67,13 @@ const EventsService = {
       .then(rows => {
         return rows[0];
       });
-  }
+  },
+
+  deleteEvent(db, event_id){
+    return db('events')
+      .where({id: event_id})
+      .delete();
+  },
 
 };
 

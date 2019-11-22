@@ -28,8 +28,20 @@ eventsRouter
   });
 
 eventsRouter
-  .route('/create')
+  .route('/user-events')
   .all(requireAuth)
+  .get((req, res, next) => {
+    const knexInstance = req.app.get('db');
+    const user_id = req.user.id;
+
+    EventsService.getAllEventsByUser(knexInstance, user_id)
+      .then(result => {
+        const userEvents = new Treeize();
+        userEvents.grow(result);
+        return res.status(200).json(userEvents.getData());
+      })
+      .catch(next);
+  })
   .post(jsonBodyParser, (req, res, next) => {
     const knexInstance = req.app.get('db');
     const {
@@ -70,37 +82,31 @@ eventsRouter
         return res.status(201).json(event);
       })
       .catch(next);
-  });
-
-eventsRouter
-  .route('/user-events')
-  .all(requireAuth)
-  .get((req, res, next) => {
-    const knexInstance = req.app.get('db');
-    const user_id = req.user.id;
-
-    EventsService.getAllEventsByUser(knexInstance, user_id)
-      .then(result => {
-        const userEvents = new Treeize();
-        userEvents.grow(result);
-        return res.status(200).json(userEvents.getData());
-      })
-      .catch(next);
-  });
-
-eventsRouter
-  .route('/updateSlots')
-  .all(requireAuth)
+  })
   .patch(jsonBodyParser, (req, res, next) => {
     const knexInstance = req.app.get('db');
-    const { id } = req.body;
-    EventsService.updateSlotsAvailable(knexInstance, id)
-      .then(event => {
-        res.status(200).json(event);
+    const { id, slots_available } = req.body;
+
+    if (slots_available === 'decrease') {
+      EventsService.updateSlotsAvailable(knexInstance, id)
+        .then(event => {
+          return res.status(200).json(event);
+        })
+        .catch(next);
+    } else {
+      return res.status(404).json({ error: 'Not Found' });
+    }
+  })
+  .delete(jsonBodyParser, (req, res, next) => {
+    const knexInstance = req.app.get('db');
+    const id = req.body.id;
+
+    EventsService.deleteEvent(knexInstance, id)
+      .then(() => {
+        return res.status(204).end();
       })
       .catch(next);
   });
-
 
 
 

@@ -49,7 +49,7 @@ usersRouter
   });
 
 usersRouter
-  .route('/getLoggedInUser')
+  .route('/current-user')
   .all(requireAuth) //require auth will give us access to a logged in user as it sets the user on the request object
   .get((req, res) => {
     const currentuser = {
