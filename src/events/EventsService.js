@@ -15,6 +15,20 @@ const EventsService = {
       .orderBy(['date', 'time'], 'asc');
   },
 
+  getEventsByQuery(db, query){
+    return db
+      .from('events')
+      .where(query)
+      .whereNot({ archived: true })
+      .select('events.*', 'users.username')
+      .join(
+        'users',
+        'users.id',
+        'events.host_id'
+      )
+      .orderBy(['date', 'time'], 'asc');
+  },
+
   getAllEventsByUser(db, user_id) {
     return db
       .from('events')

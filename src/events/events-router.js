@@ -10,12 +10,29 @@ eventsRouter
   .route('/')
   .get((req, res, next) => {
     const knexInstance = req.app.get('db');
+    const { city, event_type, date } = req.query;
 
-    EventsService.getAllEvents(knexInstance)
+    if (!city && !event_type && !date) {
+      return EventsService.getAllEvents(knexInstance)
+        .then(events => {
+          return res.status(200).json(events);
+        })
+        .catch(next);
+    }
+
+    let query = { city, event_type, date };
+
+    for (const [key, value] of Object.entries(query))
+      if (!value)
+        delete query[key];
+
+    EventsService.getEventsByQuery(knexInstance, query)
       .then(events => {
         return res.status(200).json(events);
       })
       .catch(next);
+
+    
   })
   .patch((req, res, next) => {
     const knexInstance = req.app.get('db');
@@ -75,7 +92,7 @@ eventsRouter
     newEvent.additional_details = additional_details;
     newEvent.img_url = img_url;
     newEvent.archived = archived;
-    
+
     EventsService.createEvent(knexInstance, newEvent)
       .then(event => {
         event.username = req.user.username;
