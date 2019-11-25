@@ -196,7 +196,7 @@ function seedMaliciousEvent(db, user, event) {
 }
 
 
-function makeThingsFixtures() {
+function makeEventsFixtures() {
   const testUsers = makeUsersArray()
   const testEvents = makeEventsArray(testUsers)
   const testRequestors = makeRequestorsArray(testUsers, testEvents)
@@ -239,11 +239,10 @@ function seedEventsTable(db, users, events) {
 
 function seedRequestorsTable(db, users, events, requestors) {
   return db.transaction(async trx => {
-    await seedUsers(trx, users)
-    await seedEventsTables(trx, events)
+    await seedEventsTable(trx, users, events)
     await trx.into('requestors').insert(requestors)
     await trx.raw(
-      `SELECT setval('events_id_seq', ?)`,
+      `SELECT setval('requestors_id_seq', ?)`,
       [requestors[requestors.length - 1].id],
     )
   })
@@ -263,12 +262,11 @@ module.exports = {
   makeUsersArray,
   makeEventsArray,
   makeExpectedEvent,
-  //makeExpectedThingReviews,
   makeMaliciousEvent,
   makeRequestorsArray,
   makeAuthHeader,
 
-  makeThingsFixtures,
+  makeEventsFixtures,
   cleanTables,
   seedEventsTable,
   seedRequestorsTable,

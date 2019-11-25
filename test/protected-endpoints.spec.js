@@ -8,7 +8,7 @@ describe('Protected Endpoints', function () {
   const {
     testEvents,
     testUsers,
-  } = helpers.makeThingsFixtures();
+  } = helpers.makeEventsFixtures();
 
   before('make knex instance', () => {
     db = knex({
@@ -24,7 +24,7 @@ describe('Protected Endpoints', function () {
 
   afterEach('cleanup', () => helpers.cleanTables(db));
 
-  beforeEach('insert things', () =>
+  beforeEach('insert events', () =>
     helpers.seedEventsTable(
       db,
       testUsers,

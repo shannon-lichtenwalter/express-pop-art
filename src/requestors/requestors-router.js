@@ -12,7 +12,7 @@ requestorsRouter
     const user_id = req.user.id;
     RequestorsService.getAllRequests(knexInstance, user_id)
       .then(requests => {
-        return res.status(200).json(requests);
+        return res.status(200).json(RequestorsService.serializeRequests(requests));
       })
       .catch(next);
   })

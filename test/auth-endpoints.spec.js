@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 describe('Auth Endpoints', () => {
   let db;
 
-  const { testUsers } = helpers.makeThingsFixtures();
+  const { testUsers } = helpers.makeEventsFixtures();
   const testUser = testUsers[0];
 
   before('make knex instance', () => {

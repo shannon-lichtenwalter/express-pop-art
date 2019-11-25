@@ -1,3 +1,4 @@
+const xss = require('xss');
 
 const RequestorsService = {
 
@@ -35,6 +36,20 @@ const RequestorsService = {
         return rows[0];
       });
   },
+
+  serializeRequests(requestsArr){
+    return requestsArr.map(request => {
+      return {
+        id: request.id,
+        event_id: request.event_id,
+        user_id: request.user_id,
+        booking_status:request.booking_status,
+        name: xss(request.name),
+        date: request.date,
+        time: request.time
+      };
+    });
+  }
 
 };
 
