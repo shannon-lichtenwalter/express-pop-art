@@ -15,7 +15,9 @@ eventsRouter
     if (!city && !event_type && !date) {
       return EventsService.getAllEvents(knexInstance)
         .then(events => {
-          return res.status(200).json(events);
+          return res.status(200).json(events.map(event => {
+            return EventsService.serializeEvent(event);
+          }));
         })
         .catch(next);
     }
@@ -28,7 +30,10 @@ eventsRouter
 
     EventsService.getEventsByQuery(knexInstance, query)
       .then(events => {
-        return res.status(200).json(events);
+        return res.status(200).json(events.map(event => {
+          return EventsService.serializeEvent(event);
+        })
+        );
       })
       .catch(next);
 
@@ -53,10 +58,10 @@ eventsRouter
 
     EventsService.getEventById(knexInstance, event_id)
       .then(event => {
-        if(event.length === 0){
-          return res.status(404).json({error: 'Event Not Found'});
+        if (event.length === 0) {
+          return res.status(404).json({ error: 'Event Not Found' });
         }
-        return res.status(200).json(event);
+        return res.status(200).json(event.map(event=> EventsService.serializeEvent(event)));
       })
       .catch(next);
   });

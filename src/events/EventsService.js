@@ -1,4 +1,4 @@
-
+const xss = require('xss');
 
 const EventsService = {
 
@@ -99,6 +99,27 @@ const EventsService = {
     return db('events')
       .where({ id: event_id })
       .delete();
+  },
+
+  serializeEvent(event) {
+    return {
+      id: event.id,
+      name: xss(event.name),
+      date: event.date,
+      time: event.time,
+      location: xss(event.location),
+      city: xss(event.city),
+      state: event.state,
+      slots_available: event.slots_available,
+      host_id: event.host_id,
+      event_type: event.event_type,
+      paid: event.paid,
+      description: xss(event.description),
+      additional_details: xss(event.additional_details),
+      img_url: event.img_url,
+      archived: event.archived,
+      username: xss(event.username)
+    };
   },
 
 };

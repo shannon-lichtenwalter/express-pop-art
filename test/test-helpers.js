@@ -36,68 +36,68 @@ function makeEventsArray(users) {
     {
       id: 1,
       name: 'First test event!',
-      date:'1/1/2020',
-      time:'10:00:00',
-      location:'test-venue',
-      city:'test-city',
-      state:'CO',
-      slots_available: '2',
+      date: '2020-01-01T00:00:00.000Z',
+      time: '10:00:00',
+      location: 'test-venue',
+      city: 'test-city',
+      state: 'CO',
+      slots_available: 2,
       host_id: users[0].id,
-      event_type:'Music Performance',
-      paid:'false',
+      event_type: 'Music Performance',
+      paid: false,
       description: 'test event description',
-      additional_details:'test event additional details',
+      additional_details: 'test event additional details',
       img_url: null,
       archived: false
     },
     {
       id: 2,
       name: 'First test event!',
-      date:'1/1/2020',
-      time:'10:00:00',
-      location:'test-venue',
-      city:'test-city',
-      state:'CO',
-      slots_available: '2',
+      date: '2020-01-01T00:00:00.000Z',
+      time: '10:00:00',
+      location: 'test-venue',
+      city: 'test-city',
+      state: 'CO',
+      slots_available: 2,
       host_id: users[1].id,
-      event_type:'Music Performance',
-      paid:'false',
+      event_type: 'Music Performance',
+      paid: false,
       description: 'test event description',
-      additional_details:'test event additional details',
+      additional_details: 'test event additional details',
       img_url: null,
       archived: false
     },
     {
       id: 3,
       name: 'First test event!',
-      date:'1/1/2020',
-      time:'10:00:00',
-      location:'test-venue',
-      city:'test-city',
-      state:'CO',
-      slots_available: '2',
+      date: '2020-01-01T00:00:00.000Z',
+      time: '10:00:00',
+      location: 'test-venue',
+      city: 'test-city',
+      state: 'CO',
+      slots_available: 2,
       host_id: users[2].id,
-      event_type:'Music Performance',
-      paid:'false',
+      event_type: 'Music Performance',
+      paid: false,
       description: 'test event description',
-      additional_details:'test event additional details',
+      additional_details: 'test event additional details',
       img_url: null,
       archived: false
     },
     {
       id: 4,
       name: 'First test event!',
-      date:'1/1/2020',
-      time:'10:00:00',
-      location:'test-venue',
-      city:'test-city',
-      state:'CO',
-      slots_available: '2',
+      date: '2020-01-01T00:00:00.000Z',
+      time: '10:00:00',
+      location: 'test-venue',
+      city: 'test-city',
+      state: 'CO',
+      slots_available: 2,
       host_id: users[3].id,
-      event_type:'Music Performance',
-      paid:'false',
+      event_type: 'Music Performance',
+      paid: false,
       description: 'test event description',
-      additional_details:'test event additional details',
+      additional_details: 'test event additional details',
       img_url: null,
       archived: false
     },
@@ -107,31 +107,94 @@ function makeEventsArray(users) {
 function makeRequestorsArray(users, events) {
   return [
     {
-      id:1,
+      id: 1,
       event_id: events[0].id,
       user_id: users[1].id,
       booking_status: 'Pending'
     },
     {
-      id:2,
+      id: 2,
       event_id: events[1].id,
       user_id: users[2].id,
       booking_status: 'Pending'
     },
     {
-      id:3,
+      id: 3,
       event_id: events[2].id,
       user_id: users[3].id,
       booking_status: 'Pending'
     },
     {
-      id:4,
+      id: 4,
       event_id: events[3].id,
       user_id: users[4].id,
       booking_status: 'Pending'
     }
   ];
 }
+
+function makeExpectedEvent(users, event) {
+  const user = users
+    .find(user => user.id === event.host_id)
+
+  return {
+    id: event.id,
+    name: event.name,
+    date: event.date,
+    time: event.time,
+    location: event.location,
+    city: event.city,
+    state: event.state,
+    slots_available: event.slots_available,
+    host_id: user.id,
+    event_type: event.event_type,
+    paid: event.paid,
+    description: event.description,
+    additional_details: event.additional_details,
+    img_url: event.img_url,
+    archived: event.archived,
+    username: user.username
+  }
+}
+
+function makeMaliciousEvent(user) {
+  const maliciousEvent = {
+    id: 911,
+    name: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    date: new Date().toISOString(),
+    time: '22:00:00',
+    location: 'Coffee Shop',
+    city: 'Denver',
+    state: 'CO',
+    slots_available: 2,
+    host_id: user.id,
+    event_type: 'Music Performance',
+    paid: false,
+    description: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+    additional_details: 'more',
+    img_url:null,
+    archived:false
+  }
+  const expectedEvent = {
+    ...makeExpectedEvent([user], maliciousEvent),
+    name: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
+    description: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
+  }
+  return {
+    maliciousEvent,
+    expectedEvent,
+  }
+}
+
+function seedMaliciousEvent(db, user, event) {
+  return seedUsers(db, [user])
+    .then(() =>
+      db
+        .into('events')
+        .insert([event])
+    )
+}
+
 
 function makeThingsFixtures() {
   const testUsers = makeUsersArray()
@@ -177,7 +240,7 @@ function seedEventsTable(db, users, events) {
 function seedRequestorsTable(db, users, events, requestors) {
   return db.transaction(async trx => {
     await seedUsers(trx, users)
-    await seedEventsTables(trx,events)
+    await seedEventsTables(trx, events)
     await trx.into('requestors').insert(requestors)
     await trx.raw(
       `SELECT setval('events_id_seq', ?)`,
@@ -188,9 +251,9 @@ function seedRequestorsTable(db, users, events, requestors) {
 
 
 
-function makeAuthHeader(user, secret= process.env.JWT_SECRET) {
-  const token = jwt.sign({user_id: user.id}, secret,{
-    subject: user.user_name,
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+  const token = jwt.sign({ user_id: user.id }, secret, {
+    subject: user.username,
     algorithm: 'HS256',
   });
   return `Bearer ${token}`;
@@ -199,9 +262,9 @@ function makeAuthHeader(user, secret= process.env.JWT_SECRET) {
 module.exports = {
   makeUsersArray,
   makeEventsArray,
-  //makeExpectedThing,
+  makeExpectedEvent,
   //makeExpectedThingReviews,
-  //makeMaliciousThing,
+  makeMaliciousEvent,
   makeRequestorsArray,
   makeAuthHeader,
 
@@ -210,5 +273,5 @@ module.exports = {
   seedEventsTable,
   seedRequestorsTable,
   seedUsers,
-  //seedMaliciousThing,
+  seedMaliciousEvent,
 }
