@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Things Endpoints', function () {
+describe('Things Endpoints', function () {
   let db;
 
   const {
@@ -24,7 +24,7 @@ describe.only('Things Endpoints', function () {
 
   afterEach('cleanup', () => helpers.cleanTables(db));
 
-  describe('GET /api/events', () => {
+  describe('/api/events', () => {
     context('Given no events', () => {
       it('responds with 200 and an empty list', () => {
         return supertest(app)
@@ -133,22 +133,57 @@ describe.only('Things Endpoints', function () {
           .patch('/api/events/user-events')
           .set('authorization', helpers.makeAuthHeader(validUser))
           .send({
-            id:911,
-            slots_available:'decrease'
+            id: 911,
+            slots_available: 'decrease'
           })
           .expect(200)
           .expect(res => {
             expect(res.body.name).to.eql(expectedEvent.name);
             expect(res.body.description).to.eql(expectedEvent.description);
-            expect(res.body.slots_available).to.eql(expectedEvent.slots_available -1);
+            expect(res.body.slots_available).to.eql(expectedEvent.slots_available - 1);
           });
       });
-
-
-
-
     });
   });
 
+  describe('GET /api/events/event/:eventId', () => {
+    const testUsers = helpers.makeUsersArray();
+    context('Given no things', () => {
+      beforeEach('insert Users only', () =>
+        helpers.seedUsers(db, testUsers)
+      );
+      it('responds with 404', () => {
+        const eventId = 123456;
+        return supertest(app)
+          .get(`/api/events/event/${eventId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(404, { error: 'Event Not Found' });
+      });
+    });
 
+    context('Given there are events in the database', () => {
+      beforeEach('insert events', () =>
+        helpers.seedEventsTable(
+          db,
+          testUsers,
+          testEvents
+        )
+      );
+
+      it('responds with 200 and the specified thing', () => {
+        const eventId = 2;
+        const expectedThing = helpers.makeExpectedEvent(
+          testUsers,
+          testEvents[eventId - 1]
+        );
+
+        return supertest(app)
+          .get(`/api/events/event/${eventId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(200, [expectedThing]);
+      });
+    });
+
+
+  });
 });
