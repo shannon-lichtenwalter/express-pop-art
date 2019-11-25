@@ -77,7 +77,7 @@ eventsRouter
       .then(result => {
         const userEvents = new Treeize();
         userEvents.grow(result);
-        return res.status(200).json(userEvents.getData());
+        return res.status(200).json(EventsService.serializeUserEvent(userEvents.getData()));
       })
       .catch(next);
   })
@@ -118,7 +118,7 @@ eventsRouter
     EventsService.createEvent(knexInstance, newEvent)
       .then(event => {
         event.username = req.user.username;
-        return res.status(201).json(event);
+        return res.status(201).json(EventsService.serializeEvent(event));
       })
       .catch(next);
   })
@@ -129,7 +129,7 @@ eventsRouter
     if (slots_available === 'decrease') {
       EventsService.updateSlotsAvailable(knexInstance, id)
         .then(event => {
-          return res.status(200).json(event);
+          return res.status(200).json(EventsService.serializeEvent(event));
         })
         .catch(next);
     } else {

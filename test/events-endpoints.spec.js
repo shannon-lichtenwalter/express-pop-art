@@ -103,7 +103,48 @@ describe.only('Things Endpoints', function () {
           });
       });
 
-      
+      it('removes XSS attack content at event/user-events when getting user hosted events', () => {
+        const validUser = testUser;
+        return supertest(app)
+          .get('/api/events/user-events')
+          .set('authorization', helpers.makeAuthHeader(validUser))
+          .expect(200)
+          .expect(res => {
+            expect((res.body[0]).name).to.eql(expectedEvent.name);
+          });
+      });
+
+      it('removes XSS attack content at event/user-events when creating new event', () => {
+        const validUser = testUser;
+        return supertest(app)
+          .post('/api/events/user-events')
+          .set('authorization', helpers.makeAuthHeader(validUser))
+          .send(maliciousEvent)
+          .expect(201)
+          .expect(res => {
+            expect(res.body.name).to.eql(expectedEvent.name);
+            expect(res.body.description).to.eql(expectedEvent.description);
+          });
+      });
+
+      it('removes XSS attack content at event/user-events when updating event and decrements slots_available by 1', () => {
+        const validUser = testUser;
+        return supertest(app)
+          .patch('/api/events/user-events')
+          .set('authorization', helpers.makeAuthHeader(validUser))
+          .send({
+            id:911,
+            slots_available:'decrease'
+          })
+          .expect(200)
+          .expect(res => {
+            expect(res.body.name).to.eql(expectedEvent.name);
+            expect(res.body.description).to.eql(expectedEvent.description);
+            expect(res.body.slots_available).to.eql(expectedEvent.slots_available -1);
+          });
+      });
+
+
 
 
     });

@@ -122,6 +122,19 @@ const EventsService = {
     };
   },
 
+  serializeUserEvent(eventArr) {
+    return eventArr.map(event => {
+      return {
+        id: event.id,
+        name: xss(event.name),
+        date: event.date,
+        time: event.time,
+        slots_available: event.slots_available,
+        requestors: event.requestors
+      };
+    });
+  }
+
 };
 
 module.exports = EventsService;
