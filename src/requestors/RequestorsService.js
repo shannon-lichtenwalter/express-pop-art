@@ -6,6 +6,7 @@ const RequestorsService = {
     return db('requestors')
       .select('requestors.*', 'events.name', 'events.date', 'events.time')
       .where({ user_id })
+      .whereNot({archived: true})
       .join(
         'events',
         'requestors.event_id',
