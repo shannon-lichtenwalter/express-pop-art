@@ -23,7 +23,7 @@ By hosting an event, the user can specify how many artists they need for said ev
 
 ### The API
 
-This API was built using NodeJS and PostgreSQL. Most of the endpoints are protected with a JWT auth requirement with the exception of getting a list of upcoming events and for creating a new user.
+This API was built using NodeJS, Express, and PostgreSQL. Most of the endpoints are protected with a JWT auth requirement with the exception of getting a list of upcoming events and for creating a new user.
 
 ### Endpoints
 
