@@ -8,7 +8,7 @@ Created by Shannon Lichtenwalter
 #### This server and database are intended to be used strictly with the Pop Art React front-end client only
 
 ### What is Pop Art?
-Pop are is an interactive application that was created to make booking talented artists for events easier and simplified. Event hosts are able to create event pages which serve a dual purpose of: 
+Pop Art is an interactive application that was created to make booking talented artists for events easier and simplified. Event hosts are able to create event pages which serve a dual purpose of: 
 1. Advertising the local event to the community
 2. Making artists aware of opportunities for events that they could book. 
 
